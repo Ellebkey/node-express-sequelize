@@ -1,8 +1,8 @@
 const config = require('./config/config');
 const app = require('./config/express');
-const db = require('./config/sequelize');
+const db = require('./config/sequelize'); // eslint-disable-line
 
-const debug = require('debug')('express-postgresql-sequelize-es6-rest-api:index');
+const debug = require('debug')('express-postgresql-sequelize-es6-rest-api:index'); // eslint-disable-line
 
 
 if (!module.parent) {

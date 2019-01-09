@@ -34,7 +34,7 @@ app.use(helmet());
 app.use(cors());
 
 // enable detailed API logging in dev env
- if (config.env === 'development') {
+if (config.env === 'development') {
   expressWinston.requestWhitelist.push('body');
   expressWinston.responseWhitelist.push('body');
   app.use(expressWinston.logger({

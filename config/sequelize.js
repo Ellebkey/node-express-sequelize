@@ -43,11 +43,11 @@ Object.keys(db).forEach((modelName) => {
 // Synchronizing any model changes with database.
 sequelize.sync()
   .then(() => {
-    logger.info("Database synchronized");
+    logger.info('Database synchronized');
   })
-  .catch( err =>{
-  logger.error(err);
-});
+  .catch((err) => {
+    logger.error(err);
+  });
 
 // assign the sequelize variables to the db object and returning the db.
 module.exports = _.extend(

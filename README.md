@@ -1,6 +1,6 @@
 # Node, Express & Sequelize REST API Boilerplate in ES6
 
-# [![Express ES6 REST API Starter](https://i.imgur.com/cKqhQtM.png)](https://github.com/Ellebkey/express-sequelize)
+# [![Express ES6 REST API Starter](https://i.imgur.com/cKqhQtM.png)](https://github.com/Ellebkey/node-express-sequelize)
 
 ## Overview
 
@@ -28,8 +28,8 @@ Heavily inspired from [Express & mongoose REST API Boilerplate in ES6 with Code 
 
 Clone the repo:
 ```sh
-git clone https://github.com/Ellebkey/node-express-mongoose.git
-cd node-express-mongoose
+git clone https://github.com/Ellebkey/node-express-sequelize.git
+cd node-express-sequelize
 ```
 
 Install yarn:
@@ -112,10 +112,10 @@ bash bin/development.sh
 # To use this option you need to make sure mongodb is listening on port 27017
 
 # Build docker 
-docker build -t express-mongoose-es6-rest-api .
+docker build -t express-sequelize-es6-rest-api .
 
 # Run docker
-docker run -p 4040:4040 express-mongoose-es6-rest-api
+docker run -p 4040:4040 express-sequelize-es6-rest-api
 ```
 
 
@@ -132,7 +132,7 @@ If you would prefer not to use any of our tooling, delete the following files fr
 Contributions, questions and comments are all welcome and encouraged. For code contributions submit a pull request with unit test.
 
 ## License
-This project is licensed under the [MIT License](https://github.com/Ellebkey/node-express-mongoose/blob/master/LICENSE)
+This project is licensed under the [MIT License](https://github.com/Ellebkey/node-express-sequelize/blob/master/LICENSE)
 
 
 ## Meta

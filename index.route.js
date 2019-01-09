@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const glob = require('glob');
+const _ = require('lodash');
 const logger = require('./config/winston');
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -12,16 +13,14 @@ router.get('/health-check', (req, res) => {
 
 /** Configure the modules ACL policies */
 logger.info('Initializing Modules Server Policies...');
-for (const file of glob.sync( './server/policies/*.js' )) {
-  require( path.resolve( file ) ).invokeRolesPolicies();
-}
+_.forEach(glob.sync('./server/policies/*.js'), (file) => {
+  require(path.resolve(file)).invokeRolesPolicies(); // eslint-disable-line
+});
 
 /** Configure the modules server routes */
 logger.info('Initializing Modules Server Routes...');
-for (const file of glob.sync( './server/routes/*.js' )) {
-  router.use('/', require( path.resolve( file ) ));
-}
-
-
+_.forEach(glob.sync('./server/routes/*.js'), (file) => {
+  router.use('/', require(path.resolve(file))); // eslint-disable-line
+});
 
 module.exports = router;

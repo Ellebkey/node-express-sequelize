@@ -2,7 +2,7 @@ const winston = require('winston');
 
 const logger = winston.createLogger({
   format: winston.format.combine(
-    winston.format.colorize( { all: true } ),
+    winston.format.colorize({ all: true }),
     winston.format.json(),
     winston.format.timestamp({
       format: 'YYYY-MM-DD HH:mm:ss'

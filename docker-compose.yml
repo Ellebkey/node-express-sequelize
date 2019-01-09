@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  express-mongoose:
+  express-sequelize:
     build:
       context: .
     volumes:
@@ -24,15 +24,8 @@ services:
 
     # Overwrite any env var defined in .env file (if required)
     environment:
-      - MONGO_HOST=mongodb://mongo/express-mongoose-development
-      - DEBUG=express-mongoose:*
+      - DEBUG=express-sequelize:*
 
     # Link to containers in another service.
     # Links also express dependency between services in the same way as depends_on,
     # so they determine the order of service startup.
-    links:
-      - mongo
-  mongo:
-    image: "mongo:3.4"
-    ports:
-      - "27017:27017"
