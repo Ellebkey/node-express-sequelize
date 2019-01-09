@@ -1,0 +1,15 @@
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  format: winston.format.combine(
+    winston.format.colorize( { all: true } ),
+    winston.format.json(),
+    winston.format.timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss'
+    }),
+    winston.format.printf(info => `${info.timestamp} \n${info.level}: ${info.message} \n`)
+  ),
+  transports: [new winston.transports.Console()]
+});
+
+module.exports = logger;
