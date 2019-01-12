@@ -1,12 +1,9 @@
 const _ = require('lodash');
 const gulp = require('gulp');
-const browserSync = require('browser-sync');
-const nodemon = require('gulp-nodemon');
-const eslint = require('gulp-eslint');
+const gulpNodemon = require('gulp-nodemon');
+const gulpEslint = require('gulp-eslint');
 const defaultAssets = require('./config/assets/default');
 
-const index = 'index.js';
-const debugRun = 'node --inspect=127.0.0.1:9229';
 const allJS = _.union(
   defaultAssets.server.gulpConfig,
   defaultAssets.server.allJS,
@@ -18,27 +15,42 @@ const allJS = _.union(
   defaultAssets.server.helpers
 );
 
-gulp.task('nodemon', () => {
-  nodemon({
-    script: index,
-    exec: debugRun,
-    watch: allJS
+const eslint = () => gulp.src(allJS)
+  .pipe(gulpEslint())
+  .pipe(gulpEslint.format());
+
+const eslintFix = () => gulp.src(allJS, { base: './' })
+  .pipe(gulpEslint({ fix: true }))
+  .pipe(gulpEslint.format())
+  .pipe(gulp.dest('./'));
+
+const watchEslint = () => gulp.watch(allJS, gulp.series('eslint'));
+
+const nodemon = () => {
+  const script = 'index.js';
+
+  const exec = 'node --inspect=127.0.0.1:9229';
+
+  const env = {
+    NODE_ENV: process.env.NODE_ENV,
+    PORT: '4040',
+    TZ: 'utc'
+  };
+
+  const result = gulpNodemon({
+    script,
+    stdout: true,
+    exec,
+    env
   });
-});
 
-gulp.task('browser-sync', ['nodemon'], () => ({ }));
+  return result;
+};
 
-gulp.task('js', () => {
-  gulp.src('server/**/**/*.js')
-    .pipe(browserSync.reload({ stream: true }))
-    .pipe(eslint())
-    .pipe(eslint.format());
-});
+// code quality
+gulp.task('eslint', eslint);
+gulp.task('eslint_fix', eslintFix);
+gulp.task('eslint_watch', gulp.series(watchEslint));
 
-gulp.task('bs-reload', () => {
-  browserSync.reload();
-});
-
-gulp.task('default', ['browser-sync'], () => {
-  gulp.watch('server/**/**/*.js', ['js', browserSync.reload]);
-});
+// app runner
+gulp.task('default', gulp.parallel('eslint_watch', nodemon));
