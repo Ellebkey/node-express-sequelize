@@ -9,11 +9,11 @@ const controller = {};
  */
 controller.getById = async (req, res, next, id) => {
   try {
-    const user = await db.User.findById(id);
+    const user = await db.User.findByPk(id);
     logger.info(`getting user  ${id}`);
 
     if (!user) {
-      return res.status(400)
+      return res.status(404)
         .send({
           message: `User with id: ${id}, was not found`,
           error: user
@@ -103,12 +103,12 @@ controller.update = async (req, res) => {
  * @returns {User[]}
  */
 controller.list = async (req, res, next) => {
-  const { limit = 50, skip = 0 } = req.query;
+  const { limit = 50, offset = 0 } = req.query;
 
   try {
     const users = await db.User.findAll({
-      limit,
-      skip
+      limit: parseInt(limit, 10),
+      offset: parseInt(offset, 10)
     });
     logger.info('getting users list');
     return res.json(users);
@@ -122,11 +122,11 @@ controller.list = async (req, res, next) => {
  * Delete user.
  * @returns {User}
  */
-controller.remove = (req, res, next) => {
+controller.remove = async (req, res, next) => {
   const { userDB } = req;
 
   try {
-    const deletedUser = userDB.destroy();
+    const deletedUser = await userDB.destroy();
     return res.json(deletedUser);
   } catch (err) {
     logger.error(`Error trying to deleting user ${err}`);

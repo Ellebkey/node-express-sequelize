@@ -16,7 +16,7 @@ const controller = {};
  */
 controller.login = async (req, res) => {
   try {
-    const user = await db.User.findById(req.body.username);
+    const user = await db.User.findOne({ where: { username: req.body.username } });
 
     if (!user) {
       return res.status(401).send({

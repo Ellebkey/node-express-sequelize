@@ -51,6 +51,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
+  }, {
+    hooks: {
+      beforeValidate(user) {
+        if (user.isNewRecord) {
+          user.roles = user.dataValues.roles.toString();
+        } else {
+          user.roles = user.roles.toString();
+        }
+      }
+    }
   });
 
   return User;

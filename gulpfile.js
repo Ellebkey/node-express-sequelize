@@ -1,30 +1,28 @@
-const _ = require('lodash');
 const gulp = require('gulp');
 const gulpNodemon = require('gulp-nodemon');
 const gulpEslint = require('gulp-eslint');
-const defaultAssets = require('./config/assets/default');
+const gulpMocha = require('gulp-mocha');
 
-const allJS = _.union(
-  defaultAssets.server.gulpConfig,
-  defaultAssets.server.allJS,
-  defaultAssets.server.controllers,
-  defaultAssets.server.models,
-  defaultAssets.server.routes,
-  defaultAssets.server.policies,
-  defaultAssets.server.validations,
-  defaultAssets.server.helpers
-);
+const eslintSources = [
+  'server/**/*.js',
+  'index.js',
+  'config/**/*.js',
+  'tests/*.js'
+];
 
-const eslint = () => gulp.src(allJS)
+const eslint = () => gulp.src(eslintSources)
   .pipe(gulpEslint())
   .pipe(gulpEslint.format());
 
-const eslintFix = () => gulp.src(allJS, { base: './' })
+const eslintFix = () => gulp.src(eslintSources, { base: './' })
   .pipe(gulpEslint({ fix: true }))
   .pipe(gulpEslint.format())
   .pipe(gulp.dest('./'));
 
-const watchEslint = () => gulp.watch(allJS, gulp.series('eslint'));
+const watchEslint = () => gulp.watch(eslintSources, gulp.series('eslint'));
+
+const mochaTest = () => gulp.src('tests/*.js', { read: false })
+  .pipe(gulpMocha({ reporter: 'spec' }));
 
 const nodemon = () => {
   const script = 'index.js';
@@ -32,7 +30,7 @@ const nodemon = () => {
   const exec = 'node --inspect=127.0.0.1:9229';
 
   const env = {
-    NODE_ENV: process.env.NODE_ENV,
+    NODE_ENV: process.env.NODE_ENV || 'development',
     PORT: '4040',
     TZ: 'utc'
   };
@@ -51,6 +49,9 @@ const nodemon = () => {
 gulp.task('eslint', eslint);
 gulp.task('eslint_fix', eslintFix);
 gulp.task('eslint_watch', gulp.series(watchEslint));
+
+// testing
+gulp.task('test', mochaTest);
 
 // app runner
 gulp.task('default', gulp.parallel('eslint_watch', nodemon));
