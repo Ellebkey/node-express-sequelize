@@ -107,8 +107,8 @@ controller.list = async (req, res, next) => {
 
   try {
     const users = await db.User.findAll({
-      limit: parseInt(limit, 10),
-      offset: parseInt(offset, 10)
+      limit: +limit,
+      offset: +offset
     });
     logger.info('getting users list');
     return res.json(users);

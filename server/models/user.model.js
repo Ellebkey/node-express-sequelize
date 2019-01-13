@@ -55,9 +55,9 @@ module.exports = (sequelize, DataTypes) => {
     hooks: {
       beforeValidate(user) {
         if (user.isNewRecord) {
-          user.roles = user.dataValues.roles.toString();
+          user.roles = user.dataValues.roles.toString(); // eslint-disable-line
         } else {
-          user.roles = user.roles.toString();
+          user.roles = user.roles.toString(); // eslint-disable-line
         }
       }
     }
