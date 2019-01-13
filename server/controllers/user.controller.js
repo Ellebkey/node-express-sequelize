@@ -19,7 +19,7 @@ controller.getById = async (req, res, next, id) => {
           error: user
         });
     }
-    req.user = user;
+    req.userDB = user;
     return next();
   } catch (err) {
     logger.error(err);
@@ -35,7 +35,7 @@ controller.getById = async (req, res, next, id) => {
  * Get user
  * @returns {User}
  */
-controller.read = (req, res) => res.json(req.user);
+controller.read = (req, res) => res.json(req.userDB);
 
 /**
  * Create new user
@@ -79,13 +79,13 @@ controller.create = async (req, res) => {
  * @returns {User}
  */
 controller.update = async (req, res) => {
-  const { user } = req;
+  const { userDB } = req;
 
-  user.username = req.body.username;
-  user.mobileNumber = req.body.mobileNumber;
+  userDB.username = req.body.username;
+  userDB.mobileNumber = req.body.mobileNumber;
 
   try {
-    const savedUser = await user.save();
+    const savedUser = await userDB.save();
     return res.json(savedUser);
   } catch (err) {
     logger.error(`Error updating user ${err}`);
@@ -123,10 +123,15 @@ controller.list = async (req, res, next) => {
  * @returns {User}
  */
 controller.remove = (req, res, next) => {
-  const { user } = req;
-  user.destroy()
-    .then(deletedUser => res.json(deletedUser))
-    .catch(e => next(e));
+  const { userDB } = req;
+
+  try {
+    const deletedUser = userDB.destroy();
+    return res.json(deletedUser);
+  } catch (err) {
+    logger.error(`Error trying to deleting user ${err}`);
+    return next(err);
+  }
 };
 
 module.exports = controller;

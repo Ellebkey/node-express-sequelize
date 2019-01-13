@@ -28,7 +28,7 @@ exports.invokeRolesPolicies = () => {
       resources: '/api/users',
       permissions: ['get']
     }, {
-      resources: '/api/articles/:userId',
+      resources: '/api/users/:userId',
       permissions: ['get']
     }]
   }]);

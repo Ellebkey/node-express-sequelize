@@ -15,7 +15,8 @@ router.route('/users')
   /** POST /api/users - Create new user */
   .post(validate(paramValidation.createUser), users.create);
 
-router.route('users/:userId')
+router.route('/users/:userId')
+  .all(canAccess, policies.isAllowed)
   /** GET /api/users/:userId - Get user */
   .get(users.read)
 

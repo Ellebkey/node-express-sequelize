@@ -10,7 +10,7 @@ exports.isAllowed = async (req, res, next) => {
 
   try {
     const isAllowed = await acl
-      .areAnyRolesAllowed(roles, req.originalUrl, req.method.toLowerCase());
+      .areAnyRolesAllowed(roles, req.baseUrl + req.route.path, req.method.toLowerCase());
     if (isAllowed) {
       // Access granted! Invoke next middleware
       return next();

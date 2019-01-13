@@ -17,11 +17,18 @@ const controller = {};
 controller.login = async (req, res) => {
   try {
     const user = await db.User.findById(req.body.username);
+
+    if (!user) {
+      return res.status(401).send({
+        message: 'User is not on database'
+      });
+    }
+
     const validPassword = await bcrypt.compare(req.body.password, user.hashedPassword);
 
     if (!validPassword) {
       return res.status(401).send({
-        message: 'Contraseña invalida'
+        message: 'Invalid password'
       });
     }
     const token = jwt.sign({

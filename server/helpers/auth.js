@@ -19,10 +19,10 @@ module.exports = (req, res, next) => {
       });
     }
   } else {
-    return res.status(403).json({
+    return res.status(401).json({
       error: {
         message: 'User is not logged, you need a token!',
-        code: 403
+        code: 401
       }
     });
   }
