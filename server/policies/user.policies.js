@@ -1,4 +1,4 @@
-const acl = require('../helpers/policy-allow').aclBackend();
+const acl = require('../middlewares/policy-allow').aclBackend();
 
 /**
  * Invoke Permissions

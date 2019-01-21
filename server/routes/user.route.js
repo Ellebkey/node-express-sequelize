@@ -1,9 +1,9 @@
 const express = require('express');
 const paramValidation = require('../validations/user.validation');
 const users = require('../controllers/user.controller');
-const canAccess = require('../helpers/auth');
-const policies = require('../helpers/policy-allow');
-const validate = require('../helpers/validation');
+const canAccess = require('../middlewares/auth');
+const policies = require('../middlewares/policy-allow');
+const validate = require('../middlewares/validation');
 
 const router = express.Router(); // eslint-disable-line new-cap
 

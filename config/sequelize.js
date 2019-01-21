@@ -31,8 +31,8 @@ fs
   .filter(file => file.indexOf('.') !== 0 && file.indexOf('.map') === -1)
   // import model files and save model names
   .forEach((file) => {
-    logger.info(`Loading model file ${file}`);
     const model = sequelize.import(path.join(modelsDir, file));
+    logger.info(`Initializing Model ${model.name}...`);
     db[model.name] = model;
   });
 

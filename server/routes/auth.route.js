@@ -1,7 +1,7 @@
 const express = require('express');
 const authCtrl = require('../controllers/auth.controller');
-const canAccess = require('../helpers/auth');
-const policies = require('../helpers/policy-allow');
+const canAccess = require('../middlewares/auth');
+const policies = require('../middlewares/policy-allow');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
