@@ -1,6 +1,14 @@
 const bcrypt = require('bcrypt');
+const httpStatus = require('http-status');
 const db = require('../../config/sequelize');
 const logger = require('../../config/winston');
+const APIError = require('../utils/APIError');
+
+const apiError = new APIError({
+  message: 'An unexpected error occurred',
+  status: httpStatus.INTERNAL_SERVER_ERROR,
+  stack: undefined,
+});
 
 const controller = {};
 
@@ -13,21 +21,17 @@ controller.getById = async (req, res, next, id) => {
     logger.info(`getting user  ${id}`);
 
     if (!user) {
-      return res.status(404)
-        .send({
-          message: `User with id: ${id}, was not found`,
-          error: user
-        });
+      apiError.status = httpStatus.NOT_FOUND;
+      apiError.message = `User with id: ${id}, was not found`;
+      return next(apiError);
     }
+
     req.userDB = user;
     return next();
   } catch (err) {
     logger.error(err);
-    return res.status(500)
-      .send({
-        message: 'An unexpected error occurred',
-        error: err
-      });
+    apiError.error = err;
+    return next(apiError);
   }
 };
 
@@ -43,14 +47,10 @@ controller.read = (req, res) => res.json(req.userDB);
  * @property {string} req.body.mobileNumber - The mobileNumber of user.
  * @returns {User}
  */
-controller.create = async (req, res) => {
+controller.create = async (req, res, next) => {
   if (!req.body.password) {
-    return res.status(500)
-      .send({
-        message: 'An unexpected error occurred',
-        error: 'Not password',
-        code: 500
-      });
+    apiError.message = 'Not password';
+    return next(apiError);
   }
 
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -62,13 +62,9 @@ controller.create = async (req, res) => {
     const savedUser = await db.User.create(user);
     return res.json(savedUser);
   } catch (err) {
-    logger.error(`Error in getting user ${err}`);
-    return res.status(500)
-      .send({
-        message: `An unexpected error occurred: ${err}`,
-        error: err,
-        code: 500
-      });
+    logger.error(`Error creating user ${err}`);
+    apiError.error = err;
+    return next(apiError);
   }
 };
 
@@ -78,7 +74,7 @@ controller.create = async (req, res) => {
  * @property {string} req.body.mobileNumber - The mobileNumber of user.
  * @returns {User}
  */
-controller.update = async (req, res) => {
+controller.update = async (req, res, next) => {
   const { userDB } = req;
 
   userDB.username = req.body.username;
@@ -89,10 +85,8 @@ controller.update = async (req, res) => {
     return res.json(savedUser);
   } catch (err) {
     logger.error(`Error updating user ${err}`);
-    return res.status(500)
-      .send({
-        message: `An unexpected error occurred: ${err}`
-      });
+    apiError.error = err;
+    return next(apiError);
   }
 };
 
@@ -114,7 +108,8 @@ controller.list = async (req, res, next) => {
     return res.json(users);
   } catch (err) {
     logger.error(`Error in getting users ${err}`);
-    return next(err);
+    apiError.error = err;
+    return next(apiError);
   }
 };
 
@@ -130,7 +125,8 @@ controller.remove = async (req, res, next) => {
     return res.json(deletedUser);
   } catch (err) {
     logger.error(`Error trying to deleting user ${err}`);
-    return next(err);
+    apiError.error = err;
+    return next(apiError);
   }
 };
 

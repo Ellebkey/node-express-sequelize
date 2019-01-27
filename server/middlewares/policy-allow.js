@@ -1,4 +1,6 @@
 const Accesslist = require('acl');
+const httpStatus = require('http-status');
+const APIError = require('../utils/APIError');
 
 // Using the memory backend
 const acl = new Accesslist(new Accesslist.memoryBackend()); // eslint-disable-line new-cap
@@ -6,6 +8,12 @@ const acl = new Accesslist(new Accesslist.memoryBackend()); // eslint-disable-li
  * Check If Policy Allows
  */
 exports.isAllowed = async (req, res, next) => {
+  const apiError = new APIError({
+    message: 'User has not permissions',
+    status: httpStatus.FORBIDDEN,
+    stack: undefined,
+  });
+
   const roles = (req.user) ? req.user.roles : ['guest'];
 
   try {
@@ -15,20 +23,12 @@ exports.isAllowed = async (req, res, next) => {
       // Access granted! Invoke next middleware
       return next();
     }
-
-    return res.status(403)
-      .json({
-        error: {
-          msg: 'User is not authorized'
-        }
-      });
+    return next(apiError);
   } catch (e) {
-    return res.status(500)
-      .json({
-        error: {
-          msg: 'Unexpected authorization error'
-        }
-      });
+    apiError.error = e;
+    apiError.message = 'An unexpected error occurred';
+    apiError.staus = httpStatus.INTERNAL_SERVER_ERROR;
+    return next(apiError);
   }
 };
 

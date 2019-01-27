@@ -20,7 +20,8 @@ _.forEach(glob.sync('./server/policies/*.js'), (file) => {
 /** Configure the modules server routes */
 logger.info('Initializing Modules Server Routes...');
 _.forEach(glob.sync('./server/routes/*.js'), (file) => {
-  router.use('/', require(path.resolve(file))); // eslint-disable-line
+  const name = path.basename(file, '.route.js');
+  router.use(`/${name}`, require(path.resolve(file))); // eslint-disable-line
 });
 
 module.exports = router;
