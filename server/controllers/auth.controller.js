@@ -7,7 +7,7 @@ const logger = require('../../config/winston');
 const APIError = require('../utils/APIError');
 
 const apiError = new APIError({
-  message: 'Unexpected',
+  message: 'An unexpected error occurred',
   status: httpStatus.INTERNAL_SERVER_ERROR,
   stack: undefined,
 });
@@ -26,6 +26,7 @@ controller.login = async (req, res, next) => {
     const user = await db.User.findOne({ where: { username: req.body.username } });
 
     if (!user) {
+      apiError.status = httpStatus.NOT_FOUND;
       apiError.message = 'User is not on database';
       return next(apiError);
     }

@@ -7,7 +7,7 @@ exports.invokeRolesPolicies = () => {
   acl.allow([{
     roles: ['admin'],
     allows: [{
-      resources: '/api/users',
+      resources: '/api/users/',
       permissions: '*'
     }, {
       resources: '/api/users/:userId',
@@ -16,7 +16,7 @@ exports.invokeRolesPolicies = () => {
   }, {
     roles: ['user'],
     allows: [{
-      resources: '/api/users',
+      resources: '/api/users/',
       permissions: ['get', 'post']
     }, {
       resources: '/api/users/:userId',
@@ -25,7 +25,7 @@ exports.invokeRolesPolicies = () => {
   }, {
     roles: ['guest'],
     allows: [{
-      resources: '/api/users',
+      resources: '/api/users/',
       permissions: ['get']
     }, {
       resources: '/api/users/:userId',

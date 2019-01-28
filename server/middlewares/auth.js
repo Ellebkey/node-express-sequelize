@@ -18,11 +18,11 @@ module.exports = (req, res, next) => {
       return next();
     } catch (err) {
       apiError.message = 'Failed to authenticate token!';
-      apiError.status = httpStatus.FORBIDDEN;
       apiError.stack = err.stack;
       return next(apiError);
     }
   } else {
+    apiError.message = 'User is not logged, you need a token!';
     return next(apiError);
   }
 };

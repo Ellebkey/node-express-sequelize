@@ -55,7 +55,7 @@ describe('## Misc', () => {
         .get('/api/404')
         .expect(httpStatus.NOT_FOUND)
         .then((res) => {
-          expect(res.body.message).to.equal('Not Found');
+          expect(res.body.error.message).to.equal('API Not found');
           done();
         })
         .catch(done);

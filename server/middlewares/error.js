@@ -13,7 +13,7 @@ const handler = (err, req, res, next) => { // eslint-disable-line
     delete response.stack;
   }
   res.status(err.status);
-  res.json(response);
+  res.json({ error: response });
   res.end();
 };
 exports.handler = handler;

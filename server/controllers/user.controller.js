@@ -54,7 +54,6 @@ controller.create = async (req, res, next) => {
   }
 
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  logger.info(hashedPassword);
   const user = req.body;
   user.hashedPassword = hashedPassword;
 

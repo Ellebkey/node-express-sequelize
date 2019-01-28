@@ -87,7 +87,7 @@ describe('## User APIs', () => {
         .set('authorization', jwtToken)
         .expect(httpStatus.NOT_FOUND)
         .then((res) => {
-          expect(res.body.message).to.equal('User with id: 1111111111, was not found');
+          expect(res.body.error.message).to.equal('User with id: 1111111111, was not found');
           done();
         })
         .catch(done);
