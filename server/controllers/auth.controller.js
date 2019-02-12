@@ -41,7 +41,7 @@ controller.login = async (req, res, next) => {
     const token = jwt.sign({
       username: user.username,
       roles: user.roles,
-    }, config.jwtSecret);
+    }, config.jwtSecret, { expiresIn: 60 * 60 }); // expires in 1hr
 
     return res.json({
       token,
@@ -64,11 +64,11 @@ controller.signup = async (req, res, next) => {
   user.hashedPassword = hashedPassword;
 
   try {
-    await db.User.save(user);
+    await db.User.create(user);
 
     const token = jwt.sign({
       username: user.username
-    }, config.jwtSecret);
+    }, config.jwtSecret, { expiresIn: 60 * 60 }); // expires in 1hr
 
     return res.json({
       token,

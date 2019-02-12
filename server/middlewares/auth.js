@@ -19,6 +19,13 @@ module.exports = (req, res, next) => {
     } catch (err) {
       apiError.message = 'Failed to authenticate token!';
       apiError.stack = err.stack;
+      apiError.tag = 'failed-token';
+
+      if (err.name === 'TokenExpiredError') {
+        apiError.message = 'Need to login again!';
+        apiError.tag = 'expired-token';
+      }
+
       return next(apiError);
     }
   } else {

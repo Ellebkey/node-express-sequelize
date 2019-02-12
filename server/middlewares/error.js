@@ -6,6 +6,7 @@ const handler = (err, req, res, next) => { // eslint-disable-line
   const response = {
     code: err.status,
     message: err.message || httpStatus[err.status],
+    tag: err.tag,
     errors: err.errors,
     stack: err.stack,
   };
@@ -28,6 +29,7 @@ exports.converter = (err, req, res, next) => { // eslint-disable-line
   if (!(err instanceof APIError)) {
     convertedError = new APIError({
       message: err.message,
+      tag: err.tag,
       status: err.status,
       stack: err.stack,
     });
@@ -42,6 +44,7 @@ exports.converter = (err, req, res, next) => { // eslint-disable-line
 exports.notFound = (req, res, next) => { // eslint-disable-line
   const err = new APIError({
     message: 'API Not found',
+    tag: 'not-found',
     status: httpStatus.NOT_FOUND,
   });
   return handler(err, req, res);
@@ -54,6 +57,7 @@ exports.notFound = (req, res, next) => { // eslint-disable-line
 exports.rateLimitHandler = (req, res, next) => { // eslint-disable-line
   const err = new APIError({
     message: 'Rate limt exceeded, please try again later some time.',
+    tag: 'limit-exceed',
     status: httpStatus.TOO_MANY_REQUESTS,
   });
   return handler(err, req, res);

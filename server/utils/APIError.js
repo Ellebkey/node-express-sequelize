@@ -27,6 +27,7 @@ class APIError extends ExtendableError {
   /**
    * Creates an API error.
    * @param {string} message - Error message.
+   * @param {string} tag - Error tag
    * @param {string} errors - Error message.
    * @param {string} stack - Error message.
    * @param {number} status - HTTP status code of error.
@@ -34,13 +35,14 @@ class APIError extends ExtendableError {
    */
   constructor({
     message,
+    tag,
     errors,
     stack,
     status = httpStatus.INTERNAL_SERVER_ERROR,
     isPublic = false,
   }) {
     super({
-      message, errors, status, isPublic, stack,
+      message, tag, errors, status, isPublic, stack,
     });
   }
 }
