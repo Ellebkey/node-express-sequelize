@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const httpStatus = require('http-status');
+const moment = require('moment');
 const db = require('../../config/sequelize');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
@@ -13,6 +14,7 @@ const apiError = new APIError({
 });
 
 const controller = {};
+const tokenDuration = 1; // in hours
 
 /**
  * Returns jwt token if valid username and password is provided
@@ -41,9 +43,12 @@ controller.login = async (req, res, next) => {
     const token = jwt.sign({
       username: user.username,
       roles: user.roles,
-    }, config.jwtSecret, { expiresIn: 60 * 60 }); // expires in 1hr
+    }, config.jwtSecret, { expiresIn: 60 * (60 * tokenDuration) }); // expires in 1hr
+
+    const expiresIn = moment(Date.now()).add(tokenDuration, 'hours');
 
     return res.json({
+      expiresIn,
       token,
       roles: user.roles,
       username: user.username
@@ -68,9 +73,12 @@ controller.signup = async (req, res, next) => {
 
     const token = jwt.sign({
       username: user.username
-    }, config.jwtSecret, { expiresIn: 60 * 60 }); // expires in 1hr
+    }, config.jwtSecret, { expiresIn: 60 * (60 * tokenDuration) }); // expires in 1hr
+
+    const expiresIn = moment(Date.now()).add(tokenDuration, 'hours');
 
     return res.json({
+      expiresIn,
       token,
       roles: user.roles,
       username: user.username
